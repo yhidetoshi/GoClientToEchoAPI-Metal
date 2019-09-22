@@ -24,17 +24,20 @@ const (
 	offset      = 9 * 60 * 60
 )
 
+// Metal set Metal value
 type Metal struct {
 	Date     time.Time `json:"time"`
 	GoldInfo GoldInfo  `json:"goldInfo"`
 	Platinum Platinum  `json:"platinum"`
 }
 
+// GoldInfo set Gold value
 type GoldInfo struct {
 	RetailTax   int `json:"retailTax"`
 	PurchaseTax int `json:"purchaseTax"`
 }
 
+// Platinum set Platinum value
 type Platinum struct {
 	RetailTax   int `json:"retailTax"`
 	PurchaseTax int `json:"purchaseTax"`
@@ -45,6 +48,8 @@ func main() {
 }
 
 // func main() {
+
+// Handler lambda
 func Handler() {
 	req, _ := http.NewRequest("GET", url, nil)
 
