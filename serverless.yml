@@ -19,6 +19,8 @@ functions:
       TZ: Asia/Tokyo
       MKRKEY: ${opt:mkrkey}
       APIURL: ${opt:apiurl}
+      ID: ${opt:id}
+      PW: ${opt:pw}
     events:
       - schedule: rate(1 hour)
 
