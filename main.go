@@ -12,10 +12,12 @@ import (
 )
 
 var (
-	// url = "http://localhost:1323/metal"
+	//url = "http://localhost:1323/metal"
 	url    = os.Getenv("APIURL")
 	mkrKey = os.Getenv("MKRKEY")
 	client = mackerel.NewClient(mkrKey)
+	id = os.Getenv("ID")
+	pw = os.Getenv("PW")
 )
 
 const (
@@ -51,7 +53,9 @@ func main() {
 
 // Handler lambda
 func Handler() {
+
 	req, _ := http.NewRequest("GET", url, nil)
+	req.SetBasicAuth(id, pw)
 
 	client := new(http.Client)
 	resp, err := client.Do(req)
