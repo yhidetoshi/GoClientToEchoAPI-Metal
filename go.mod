@@ -1,11 +1,11 @@
 module github.com/yhidetoshi/GoClientToEchoAPI-MetalToMackerel
 
-go 1.12
+go 1.16
 
 require (
 	github.com/Songmu/make2help v0.1.1 // indirect
 	github.com/aws/aws-lambda-go v1.13.2
-	github.com/hashicorp/go-version v1.2.0 // indirect
+	github.com/hashicorp/go-version v1.4.0 // indirect
 	github.com/mackerelio/mackerel-client-go v0.8.0
 	github.com/mitchellh/gox v1.0.1 // indirect
 	golang.org/x/crypto v0.0.0-20190911031432-227b76d455e7 // indirect

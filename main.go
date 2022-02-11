@@ -16,8 +16,8 @@ var (
 	url    = os.Getenv("APIURL")
 	mkrKey = os.Getenv("MKRKEY")
 	client = mackerel.NewClient(mkrKey)
-	id = os.Getenv("ID")
-	pw = os.Getenv("PW")
+	id     = os.Getenv("ID")
+	pw     = os.Getenv("PW")
 )
 
 const (
@@ -28,21 +28,9 @@ const (
 
 // Metal set Metal value
 type Metal struct {
-	Date     time.Time `json:"time"`
-	GoldInfo GoldInfo  `json:"goldInfo"`
-	Platinum Platinum  `json:"platinum"`
-}
-
-// GoldInfo set Gold value
-type GoldInfo struct {
-	RetailTax   int `json:"retailTax"`
-	PurchaseTax int `json:"purchaseTax"`
-}
-
-// Platinum set Platinum value
-type Platinum struct {
-	RetailTax   int `json:"retailTax"`
-	PurchaseTax int `json:"purchaseTax"`
+	Date          time.Time `json:"time"`
+	GoldPrice     int       `json:"gold"`
+	PlatinumPrice int       `json:"platinum"`
 }
 
 func main() {
@@ -53,7 +41,6 @@ func main() {
 
 // Handler lambda
 func Handler() {
-
 	req, _ := http.NewRequest("GET", url, nil)
 	req.SetBasicAuth(id, pw)
 
@@ -74,25 +61,20 @@ func Handler() {
 	jst := time.FixedZone(timezone, offset)
 	nowTime := time.Now().In(jst)
 
-	mkrErr := PostValuesToMackerel(metal.GoldInfo.RetailTax, metal.GoldInfo.PurchaseTax, metal.Platinum.RetailTax, metal.Platinum.PurchaseTax, nowTime)
+	mkrErr := PostValuesToMackerel(metal.GoldPrice, metal.PlatinumPrice, nowTime)
 	if mkrErr != nil {
 		fmt.Println(mkrErr)
 	}
 }
 
 // PostValuesToMackerel Post Metrics to Mackerel
-func PostValuesToMackerel(goldRetailTax int, goldPurchaseTax int, platinumRetailTax int, platinumPurchaseTax int, nowTime time.Time) error {
+func PostValuesToMackerel(goldPrice int, platinumPrice int, nowTime time.Time) error {
 	// Post Gold metrics
 	errGold := client.PostServiceMetricValues(serviceName, []*mackerel.MetricValue{
 		&mackerel.MetricValue{
-			Name:  "Gold.retail_tax",
+			Name:  "Gold.price",
 			Time:  nowTime.Unix(),
-			Value: goldRetailTax,
-		},
-		{
-			Name:  "Gold.purchase_tax",
-			Time:  nowTime.Unix(),
-			Value: goldPurchaseTax,
+			Value: goldPrice,
 		},
 	})
 	if errGold != nil {
@@ -102,14 +84,9 @@ func PostValuesToMackerel(goldRetailTax int, goldPurchaseTax int, platinumRetail
 	// Post Platinum metrics
 	errPlatinum := client.PostServiceMetricValues(serviceName, []*mackerel.MetricValue{
 		&mackerel.MetricValue{
-			Name:  "Platinum.retail_tax",
+			Name:  "Platinum.price",
 			Time:  nowTime.Unix(),
-			Value: platinumRetailTax,
-		},
-		{
-			Name:  "Platinum.purchase_tax",
-			Time:  nowTime.Unix(),
-			Value: platinumPurchaseTax,
+			Value: platinumPrice,
 		},
 	})
 	if errPlatinum != nil {
